@@ -16,7 +16,7 @@
 
 
 
-//#line 2 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 2 "parser.yacc"
 import java.io.*;
 //#line 19 "Parser.java"
 
@@ -157,7 +157,7 @@ final ParserVal dup_yyval(ParserVal val)
 }
 //#### end semantic value section ####
 public final static short NL=257;
-public final static short NUM=258;
+public final static short IC=258;
 public final static short ID=259;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
@@ -269,7 +269,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,"NL","NUM","ID",
+null,null,null,null,null,null,"NL","IC","ID",
 };
 final static String yyrule[] = {
 "$accept : start",
@@ -278,7 +278,7 @@ final static String yyrule[] = {
 "stm : exp NL",
 "stm : assign NL",
 "assign : ID '=' exp",
-"exp : NUM",
+"exp : IC",
 "exp : ID",
 "exp : exp '+' exp",
 "exp : exp '-' exp",
@@ -287,7 +287,7 @@ final static String yyrule[] = {
 "exp : '(' exp ')'",
 };
 
-//#line 29 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 29 "parser.yacc"
 
 
 
@@ -482,43 +482,43 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 3:
-//#line 17 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 17 "parser.yacc"
 {}
 break;
 case 4:
-//#line 18 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 18 "parser.yacc"
 {}
 break;
 case 5:
-//#line 19 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 19 "parser.yacc"
 {cg.assign(val_peek(2).sval,val_peek(0).sval);}
 break;
 case 6:
-//#line 20 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 20 "parser.yacc"
 { yyval.sval = String.valueOf(val_peek(0).dval); }
 break;
 case 7:
-//#line 21 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 21 "parser.yacc"
 {yyval.sval = val_peek(0).sval;}
 break;
 case 8:
-//#line 22 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 22 "parser.yacc"
 {yyval.sval = cg.arithmeticOperand("+",val_peek(2).sval,val_peek(0).sval);}
 break;
 case 9:
-//#line 23 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 23 "parser.yacc"
 {yyval.sval = cg.arithmeticOperand("-",val_peek(2).sval,val_peek(0).sval);}
 break;
 case 10:
-//#line 24 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 24 "parser.yacc"
 {yyval.sval = cg.arithmeticOperand("*",val_peek(2).sval,val_peek(0).sval);}
 break;
 case 11:
-//#line 25 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 25 "parser.yacc"
 {yyval.sval = cg.arithmeticOperand("/",val_peek(2).sval,val_peek(0).sval);}
 break;
 case 12:
-//#line 26 "C:\Users\Pouya Payandeh\Desktop\CompilerTutorial\src\sample.yacc"
+//#line 26 "parser.yacc"
 {yyval.sval=val_peek(1).sval;}
 break;
 //#line 448 "Parser.java"

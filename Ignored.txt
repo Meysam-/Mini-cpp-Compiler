@@ -1,0 +1,3 @@
+RInvID = [0-9] [:jletterdigit:]*
+
+bison --yacc E:\SBU\Compiler\Project\m2Compiler\parser.yacc -Ljava -o  E:\SBU\Compiler\Project\m2Compiler\parser.java

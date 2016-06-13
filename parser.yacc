@@ -2,7 +2,7 @@
 import java.io.*;
 %}
 %token NL /* newline */
-%token <dval> NUM /* a number */
+%token <dval> IC /* a number */
 %token <sval> ID
 %type <sval> exp
 %left '-' '+'
@@ -17,7 +17,7 @@ start: stm start
 stm:exp NL{}
 |assign NL{}
 assign : ID '=' exp {cg.assign($1,$3);}
-exp: NUM { $$ = String.valueOf($1); }
+exp: IC { $$ = String.valueOf($1); }
 | ID {$$ = $1;}
 |exp '+' exp{$$ = cg.arithmeticOperand("+",$1,$3);}
 |exp '-' exp{$$ = cg.arithmeticOperand("-",$1,$3);}

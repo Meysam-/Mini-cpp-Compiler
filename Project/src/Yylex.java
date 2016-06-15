@@ -30,12 +30,14 @@ class Yylex {
    * Translates characters to character classes
    */
   private static final String ZZ_CMAP_PACKED = 
-    "\11\0\1\0\1\4\2\0\1\5\22\0\1\0\2\0\1\0\3\0"+
-    "\1\0\1\6\1\6\1\6\1\1\1\0\1\1\1\0\1\6\1\2"+
-    "\11\2\3\0\1\6\3\0\4\3\1\3\1\3\24\3\1\0\1\0"+
-    "\2\0\1\3\1\0\1\3\1\3\1\3\1\3\1\3\1\3\1\3"+
-    "\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3"+
-    "\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\1\3\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uff95\0";
+    "\11\0\1\21\1\14\2\0\1\15\22\0\1\21\1\23\1\13\1\17"+
+    "\1\0\1\27\1\24\1\10\1\27\1\27\1\27\1\26\1\27\1\1"+
+    "\1\3\1\20\1\5\11\2\1\27\1\27\1\23\1\22\1\23\2\0"+
+    "\4\7\1\4\1\7\24\16\1\27\1\11\1\27\1\27\1\16\1\0"+
+    "\1\7\1\7\1\7\1\7\1\4\1\7\1\16\1\16\1\16\1\16"+
+    "\1\16\1\16\1\16\1\12\1\16\1\16\1\16\1\12\1\16\1\12"+
+    "\1\16\1\16\1\16\1\6\1\16\1\16\1\27\1\25\1\27\1\27"+
+    "\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uff91\0";
 
   /** 
    * Translates characters to character classes
@@ -48,10 +50,12 @@ class Yylex {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\1\3\2\4\1\1";
+    "\1\0\1\1\1\2\1\1\1\3\1\2\2\0\2\4"+
+    "\1\0\1\1\1\5\5\1\1\0\1\6\4\0\1\7"+
+    "\3\0\1\10\1\11\2\12\2\0\1\6";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[7];
+    int [] result = new int[35];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -76,10 +80,14 @@ class Yylex {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\7\0\7\0\16\0\25\0\34\0\25";
+    "\0\0\0\30\0\60\0\110\0\140\0\170\0\220\0\250"+
+    "\0\300\0\330\0\360\0\u0108\0\300\0\u0120\0\u0138\0\u0150"+
+    "\0\u0168\0\u0180\0\110\0\u0198\0\u01b0\0\u01c8\0\u01e0\0\u01f8"+
+    "\0\u0180\0\u0210\0\u0228\0\u0240\0\u01b0\0\u0180\0\u0180\0\u0258"+
+    "\0\u0270\0\u0288\0\u0288";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[7];
+    int [] result = new int[35];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -102,11 +110,26 @@ class Yylex {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\0\1\2\1\3\1\4\1\5\1\6\1\7\2\0"+
-    "\1\3\6\0\2\4\16\0\1\5\2\0";
+    "\1\0\1\2\1\3\1\4\1\5\1\6\2\5\1\7"+
+    "\1\0\1\5\1\10\1\11\1\12\1\5\1\13\1\14"+
+    "\1\15\2\16\1\17\1\20\1\21\1\22\1\0\1\22"+
+    "\1\3\1\23\1\0\1\6\24\0\1\3\1\24\1\0"+
+    "\1\3\24\0\1\24\2\0\1\24\24\0\1\5\1\0"+
+    "\4\5\2\0\1\5\3\0\1\5\13\0\1\3\1\24"+
+    "\1\0\1\3\1\25\21\0\11\26\1\27\16\26\11\10"+
+    "\1\30\1\10\1\31\14\10\14\0\2\15\3\0\1\15"+
+    "\22\0\1\11\1\15\3\0\1\15\25\0\1\32\27\0"+
+    "\1\33\32\0\1\22\31\0\1\22\30\0\1\22\4\0"+
+    "\1\3\1\23\1\0\1\6\20\0\1\22\33\0\1\24"+
+    "\1\0\1\34\1\24\24\0\1\35\1\0\2\35\1\0"+
+    "\1\35\30\0\1\36\27\0\1\26\1\0\1\26\26\0"+
+    "\3\10\14\0\14\32\1\37\1\40\12\32\17\33\1\41"+
+    "\10\33\1\0\1\42\1\43\2\0\1\43\20\0\1\42"+
+    "\15\0\1\37\13\0\17\33\1\41\1\37\7\33\2\0"+
+    "\1\43\2\0\1\43\22\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[35];
+    int [] result = new int[672];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -144,10 +167,12 @@ class Yylex {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\3\1\1\11\1\1\1\11";
+    "\1\0\5\1\2\0\2\1\1\0\6\1\1\11\1\0"+
+    "\1\1\4\0\1\11\3\0\1\1\2\11\1\1\2\0"+
+    "\1\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[7];
+    int [] result = new int[35];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -252,7 +277,7 @@ this.yyparser = yyparser;
     char [] map = new char[0x110000];
     int i = 0;  /* index in packed string  */
     int j = 0;  /* index in unpacked array */
-    while (i < 152) {
+    while (i < 174) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
       do map[j++] = value; while (--count > 0);
@@ -560,23 +585,45 @@ this.yyparser = yyparser;
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { return (int) yycharat(0);
+            { System.out.println(yytext());
             }
-          case 5: break;
+          case 11: break;
           case 2: 
-            { yyparser.yylval = new ParserVal(Integer.parseInt(yytext()));
-return Parser.IC;
+            { System.out.println(yytext()+" "+"IC");
             }
-          case 6: break;
+          case 12: break;
           case 3: 
-            { yyparser.yylval = new ParserVal(yytext());
-return Parser.ID;
+            { System.out.println(yytext()+" "+"ID");
             }
-          case 7: break;
+          case 13: break;
           case 4: 
-            { return Parser.NL;
+            { System.out.println(yytext()+" "+"NL");
             }
-          case 8: break;
+          case 14: break;
+          case 5: 
+            { System.out.println(yytext()+" "+"WS");
+            }
+          case 15: break;
+          case 6: 
+            { System.out.println(yytext()+" "+"RC");
+            }
+          case 16: break;
+          case 7: 
+            { System.out.println(yytext()+" "+"SC");
+            }
+          case 17: break;
+          case 8: 
+            { System.out.println(yytext()+" "+"HC");
+            }
+          case 18: break;
+          case 9: 
+            { System.out.println(yytext()+" "+"CC");
+            }
+          case 19: break;
+          case 10: 
+            { System.out.println(yytext()+" "+"CM");
+            }
+          case 20: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

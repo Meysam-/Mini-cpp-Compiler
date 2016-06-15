@@ -1,0 +1,1 @@
+yacc.exe -J parser.yacc

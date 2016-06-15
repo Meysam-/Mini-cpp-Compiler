@@ -324,7 +324,8 @@ public Parser(Reader r)
 public static void main(String args[]) throws IOException 
 {
 	//Parser yyparser = new Parser(new FileReader(args[0]));
- 	Parser yyparser = new Parser(new InputStreamReader(System.in));
+ 	//Parser yyparser = new Parser(new InputStreamReader(System.in));
+    Parser yyparser = new Parser(new InputStreamReader(new FileInputStream("E:\\SBU\\Compiler\\Project\\minicomp-test-files-1606022101\\00-Lexer-debug--try-gathering-all-tokens.mini")));
 	yyparser.yyparse();
 }
 //#line 259 "Parser.java"

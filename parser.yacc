@@ -216,12 +216,15 @@ expr:	expr '+' expr
 
 variable:	ID opt_full_brackets %prec fuck
 		|	ID opt_full_brackets '.' variable %prec fuck
-		|   '~' variable
-		|   DEC variable
-		|   INC variable
-		|   variable DEC %prec ttt
-		|   variable INC %prec ttt
+		|   variable_
 		;
+
+variable_:   '~' variable
+		 |   DEC variable
+		 |   INC variable
+		 |   variable DEC %prec ttt
+		 |   variable INC %prec ttt
+		 ;
 
 const_val:	IC
 		|	RC

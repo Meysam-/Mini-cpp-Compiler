@@ -67,8 +67,11 @@ func_proc:	func_dcl
 		 ;	
 
 
-func_dcl:	typee ID '(' opt_arguments ')' sc 
-		|	typee ID '(' opt_arguments ')' block
+func_dcl:	typee ID { cg.functionDeclaration($2,$1); } '(' opt_arguments ')' func_end { cg.endFunction($2); }
+		;
+
+func_end:   sc
+		|	block
 		;
 
 extern_dcl:	EXTERN typee ID sc ;
@@ -99,7 +102,7 @@ typee:	INT {$$ = "4";}
   | 	DOUBLE {$$ = "8";}
   | 	ID       /* pre-defined type */
   | 	STRING
-  | 	VOID 
+  | 	VOID {$$ = "0";}
   | 	AUTO 
   ; 
 
@@ -171,10 +174,13 @@ parameters:	expr
 		|	parameters ',' expr
 		;
 
-cond_stmt:	IF '(' expr ')' block
-		|	IF '(' expr ')' block ELSE block
-		|	SWITCH '(' ID ')' OF ':' '{' opt_cases DEFAULT ':' block '}'
-		;
+cond_stmt:  IF '(' expr ')' {cg.ifState($3);} block end_if
+    	 |  SWITCH '(' ID ')' OF ':' '{' opt_cases DEFAULT ':' block '}'
+    	 ;
+    	 
+end_if:     {cg.endIfState();}
+      |		ELSE{ cg.startElse(); } block {cg.endElse();}
+      ;
 
 // [case cINT ':' block]*
 opt_cases: /* empty */ 
@@ -275,6 +281,7 @@ public Parser(Reader r)
 {
     cg= new CG();
 	lexer = new Yylex(r, this);
+	//yydebug = true;
 }
 /* that's how you use the parser */
 public static void main(String args[]) throws IOException 

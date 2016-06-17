@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * Created by Meysam & Mohammad on 6/3/2016.
@@ -11,11 +12,15 @@ public class CG
     int pc;
     int t;
     SymbolTable symbolTable;
+    int label;
+    Stack<Integer> labelStack;
     CG(){
         code = new TacCode[500];
+        labelStack=new Stack<Integer>();
         symbolTable = new SymbolTable();
         pc = 0;
         t = 0;
+        label=0;
     }
     String arithmeticOperand(String op,String a , String b )
     {
@@ -58,6 +63,20 @@ public class CG
         this.dclCount=0;
     }
 
+    void functionDeclaration(String name,String sizeOfOutput){
+        code[pc] = new TacCode("FUN",name,"");
+        if(!sizeOfOutput.equals("0"))
+            code[pc].opr2 = sizeOfOutput;
+        pc++;
+        System.out.println(code[pc-1]);
+    }
+
+    void endFunction(String name){
+        code[pc] = new TacCode("END",name,"");
+        pc++;
+        System.out.println(code[pc-1]);
+    }
+
     void argument(String size,String name,String dim){
         code[pc] = new TacCode("ARG");
         code[pc].opr1 = size;
@@ -72,6 +91,41 @@ public class CG
         }
         else
             code[pc].opr2 = name;
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void ifState(String id)
+    {
+        code[pc]=new TacCode("JNZ","Label"+label,id);
+        labelStack.push(label++);
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void endIfState()
+    {
+        code[pc]=new TacCode("LB","Label"+Integer.toString(labelStack.pop()),"");
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void startElse()
+    {
+        int ii=labelStack.pop();
+        code[pc]=new TacCode("JMP","Label"+label,"");
+        labelStack.push(label++);
+        System.out.println(code[pc]);
+        pc++;
+
+        code[pc]=new TacCode("LB","Label"+Integer.toString(ii),"");
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void endElse()
+    {
+        code[pc]=new TacCode("LB","Label"+Integer.toString(labelStack.pop()),"");
         System.out.println(code[pc]);
         pc++;
     }

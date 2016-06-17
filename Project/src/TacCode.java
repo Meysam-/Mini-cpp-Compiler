@@ -33,6 +33,9 @@ public class TacCode {
 
     @Override
     public String toString() {
-        return opCode + "  " + opr1 + "," + opr2 + "," + opr3;
+        String s = opCode + "  " + opr1;
+        if(!opr2.equals("")) s += "," + opr2;
+        if(!opr3.equals("")) s += "," + opr3;
+        return s;
     }
 }

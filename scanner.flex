@@ -1,13 +1,27 @@
 %%
 %byaccj
+
+//%debug
+
+%line
+%column
+
 %{
-/* store a reference to the parser object */
-private Parser yyparser;
-/* constructor taking an additional parser object */
-public Yylex(java.io.Reader r, Parser yyparser) {
-this(r);
-this.yyparser = yyparser;
-}
+	/* store a reference to the parser object */
+	private Parser yyparser;
+	/* constructor taking an additional parser object */
+	public Yylex(java.io.Reader r, Parser yyparser) {
+		this(r);
+		this.yyparser = yyparser;
+	}
+
+	public int getLine() {
+		return yyline;
+	}
+
+	public int getColumn() {
+		return yycolumn;
+	}
 %}
 
 IC = [0-9]+

@@ -14,6 +14,8 @@ import java.io.*;
 %token <sval> SC
 %token <obj> BC
 
+$type <sval> expr
+
 %right '='
 %left OR
 %left AND

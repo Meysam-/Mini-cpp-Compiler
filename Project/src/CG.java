@@ -5,7 +5,8 @@ import java.util.ArrayList;
  */
 public class CG
 {
- 
+
+    int dclCount=0;
     TacCode[] code;
     int pc;
     int t;
@@ -26,13 +27,34 @@ public class CG
     }
     void assign(String a , String b)
     {
-        if(symbolTable.lookup(a)==0)
+        if(symbolTable.lookup(a)==null)
             System.err.println(a +" not declared in this scope");
-        if(symbolTable.lookup(b)==0)
+        if(symbolTable.lookup(b)==null)
             System.err.println(b +" not declared in this scope");
 
         code[pc]=new TacCode("=",a,b);
         System.out.println(code[pc]);
         pc++;
+    }
+
+    void declarationNoType(String name)
+    {
+        if(symbolTable.lookup(name)!=null)
+            System.err.println("--redeclare: "+name);
+        symbolTable.insert(name,0);
+        code[pc]=new TacCode("VAR",name,"");
+        pc++;
+        this.dclCount++;
+    }
+    void declarationSetType(String type)
+    {
+        int sizeType=Integer.parseInt(type);
+
+        for(int i=pc-1;i>=pc-dclCount;i--){
+            code[i].opr2=type;
+            symbolTable.table.get(code[i].opr1).setSize(sizeType);
+            System.out.println(code[i]);
+        }
+        this.dclCount=0;
     }
 }

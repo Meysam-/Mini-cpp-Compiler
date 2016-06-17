@@ -14,7 +14,7 @@ import java.io.*;
 %token <sval> SC
 %token <obj> BC
 
-%type <sval> expr
+%type <sval> expr typee
 %type <sval> variable const_val
 
 %right '='
@@ -91,15 +91,15 @@ proc_dcl:	PROCEDURE ID '(' opt_arguments ')' sc
 		|	PROCEDURE ID '(' opt_arguments ')' block
 		;
 
-typee:	INT {System.out.println("myDebug: seen a type");}
-  | 	BOOL 
-  | 	FLOAT 
-  | 	LONG 
-  | 	CHAR 
-  | 	DOUBLE 
+typee:	INT {$$ = "4";}
+  | 	BOOL {$$ = "1";}
+  | 	FLOAT{$$ = "32";} 
+  | 	LONG {$$ = "32";}
+  | 	CHAR {$$ = "4";}
+  | 	DOUBLE {$$ = "32";}
   | 	ID       /* pre-defined type */
-  | 	STRING 
-  | 	VOID 	
+  | 	STRING
+  | 	VOID 
   | 	AUTO 
   ; 
 
@@ -116,7 +116,7 @@ opt_var_dcls:	/* empty */
 	   	    | var_dcl
 	   	    ;
 
-var_dcl:	typee var_dcl_cnts 
+var_dcl:	typee var_dcl_cnts{cg.declarationSetType($1);}
 	   |	CONST typee var_dcl_cnts 
 	   ;
 
@@ -125,8 +125,8 @@ var_dcl_cnts:	 var_dcl_cnt
 			| 	 var_dcl_cnts ',' var_dcl_cnt 
 			;
 
-var_dcl_cnt:	variable 
-		   | 	variable '=' expr 
+var_dcl_cnt:	variable{ cg.declarationNoType($1); } 
+		   | 	variable '=' expr {cg.declarationNoType($1);cg.assign($1,$3);}
 		   ;
 
 
@@ -211,7 +211,7 @@ expr:	expr '+' expr {$$ = cg.arithmeticOperand("+",$1,$3);}
 	|   expr LE expr {$$ = cg.arithmeticOperand("<=",$1,$3);}
 	|	'(' expr ')' {$$ = $2;}
 	|	method_call
-	|	variable	
+	|	variable 	
 	|	const_val
 	|	'-' expr %prec '!'
 	|	'+' expr %prec '!'

@@ -14,7 +14,7 @@ import java.io.*;
 %token <sval> SC
 %token <obj> BC
 
-%type <sval> expr typee
+%type <sval> expr typee opt_full_brackets
 %type <sval> variable const_val
 
 %right '='
@@ -78,8 +78,8 @@ opt_arguments:	/* empty */
 			 |  arguments 
 			 ;
 
-arguments:	typee ID opt_full_brackets 
-		|	arguments ',' typee ID opt_full_brackets 
+arguments:	typee ID opt_full_brackets { cg.argument($1,$2,$3); }
+		|	arguments ',' typee ID opt_full_brackets { cg.argument($3,$4,$5); }
 		;
 
 opt_brackets: /* empty */
@@ -93,10 +93,10 @@ proc_dcl:	PROCEDURE ID '(' opt_arguments ')' sc
 
 typee:	INT {$$ = "4";}
   | 	BOOL {$$ = "1";}
-  | 	FLOAT{$$ = "32";} 
-  | 	LONG {$$ = "32";}
-  | 	CHAR {$$ = "4";}
-  | 	DOUBLE {$$ = "32";}
+  | 	FLOAT{$$ = "4";} 
+  | 	LONG {$$ = "8";}
+  | 	CHAR {$$ = "1";}
+  | 	DOUBLE {$$ = "8";}
   | 	ID       /* pre-defined type */
   | 	STRING
   | 	VOID 
@@ -130,8 +130,8 @@ var_dcl_cnt:	variable{ cg.declarationNoType($1); }
 		   ;
 
 
-opt_full_brackets: /* empty */ 
-				|	opt_full_brackets '[' expr ']' 
+opt_full_brackets: /* empty */ {$$ = "0";}
+				|	opt_full_brackets '[' expr ']' {$$ = $1 + "," + $3;}
 				;
 
 block:	'{' block_content '}' 

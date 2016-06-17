@@ -10,7 +10,7 @@ public class TacCode {
     TacCode(){
     }
     TacCode(String opCode){
-        this.opCode = opCode;
+        this(opCode,"","");
     }
     TacCode(String opCode,String opr1,String opr2){
         this.opCode = opCode;
@@ -33,6 +33,6 @@ public class TacCode {
 
     @Override
     public String toString() {
-        return opCode + " " + opr1 + " " + opr2 + " " + opr3;
+        return opCode + "  " + opr1 + "," + opr2 + "," + opr3;
     }
 }

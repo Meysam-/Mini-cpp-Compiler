@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /**
- * Created by Meysam Kazemi on 6/3/2016.
+ * Created by Meysam & Mohammad on 6/3/2016.
  */
 public class CG
 {

@@ -26,6 +26,11 @@ public class CG
     }
     void assign(String a , String b)
     {
+        if(symbolTable.lookup(a)==0)
+            System.err.println(a +" not declared in this scope");
+        if(symbolTable.lookup(b)==0)
+            System.err.println(b +" not declared in this scope");
+
         code[pc]=new TacCode("=",a,b);
         System.out.println(code[pc]);
         pc++;

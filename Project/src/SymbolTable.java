@@ -6,18 +6,26 @@ import java.util.TreeMap;
  */
 public class SymbolTable
 {
-    Map<String , Integer> table;
+    Map<String , Integer> table;//name,typeSize
 
     public SymbolTable(){
         table = new TreeMap<String, Integer>();
     }
-    public int getValue(String id){
+
+    public int lookup(String id){
         if(table.containsKey(id))
            return table.get(id);
-        table.put(id,0);
         return 0;
     }
-    public void setValue(String id,Double Value){
-        table.put(id,Value.intValue());
+    public void insert(String id,String type){
+        int sizeType=0;
+        switch (type){
+            case "int":
+                sizeType=4;
+                break;
+            default:
+                System.out.println("--error in type: "+type);
+        }
+        table.put(id,sizeType);
     }
 }

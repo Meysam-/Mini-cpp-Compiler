@@ -5,7 +5,7 @@ import java.util.ArrayList;
  */
 public class CG
 {
-    //kjhsdifhdivhdvhiodfvd
+ 
     TacCode[] code;
     int pc;
     int t;

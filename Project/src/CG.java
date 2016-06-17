@@ -12,6 +12,7 @@ public class CG
     CG(){
         code = new TacCode[500];
         symbolTable = new SymbolTable();
+        //sducauic
         for(TacCode val:code){
             val = new TacCode();
         }

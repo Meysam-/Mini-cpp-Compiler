@@ -28,9 +28,9 @@ public class CG
     void assign(String a , String b)
     {
         if(symbolTable.lookup(a)==null)
-            System.err.println(a +" not declared in this scope");
+            m2Error(a +" not declared in this scope");
         if(symbolTable.lookup(b)==null)
-            System.err.println(b +" not declared in this scope");
+            m2Error(b +" not declared in this scope");
 
         code[pc]=new TacCode("=",a,b);
         System.out.println(code[pc]);
@@ -40,7 +40,7 @@ public class CG
     void declarationNoType(String name)
     {
         if(symbolTable.lookup(name)!=null)
-            System.err.println("--redeclare: "+name);
+            m2Error("redeclare: "+name);
         symbolTable.insert(name,0);
         code[pc]=new TacCode("VAR",name,"");
         pc++;
@@ -56,5 +56,18 @@ public class CG
             System.out.println(code[i]);
         }
         this.dclCount=0;
+    }
+
+    /*void isDeclaredGlobaly(String id)
+    {
+        if(symbolTable.lookup(id)==null)
+            m2Error( id + " not declared!!");
+
+    }*/
+
+    void m2Error(String err)
+    {
+        System.err.println("--error: " +err);
+        System.exit(0);
     }
 }

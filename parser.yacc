@@ -15,7 +15,7 @@ import java.io.*;
 %token <obj> BC
 
 %type <sval> expr
-%type <sval> variable
+%type <sval> variable const_val
 
 %right '='
 %left OR
@@ -209,7 +209,7 @@ expr:	expr '+' expr {$$ = cg.arithmeticOperand("+",$1,$3);}
 	|   expr NE expr {$$ = cg.arithmeticOperand("!=",$1,$3);}
 	|   expr GE expr {$$ = cg.arithmeticOperand(">=",$1,$3);}
 	|   expr LE expr {$$ = cg.arithmeticOperand("<=",$1,$3);}
-	|	'(' expr ')' 
+	|	'(' expr ')' {$$ = $2;}
 	|	method_call
 	|	variable	
 	|	const_val
@@ -219,7 +219,7 @@ expr:	expr '+' expr {$$ = cg.arithmeticOperand("+",$1,$3);}
 	|	SIZEOF '(' typee ')'
 	;
 
-variable:	ID opt_full_brackets %prec fuck {$$ = $1}
+variable:	ID opt_full_brackets %prec fuck {$$ = $1;}
 		|	ID opt_full_brackets '.' variable %prec fuck
 		|   variable_
 		;
@@ -231,7 +231,7 @@ variable_:   '~' variable
 		 |   variable INC %prec ttt
 		 ;
 
-const_val:	IC
+const_val:	IC {$$ = new Integer($1).toString();}
 		|	RC
 		|	CC
 		|	BC

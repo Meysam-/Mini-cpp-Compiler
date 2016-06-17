@@ -19,15 +19,11 @@ public class CG
     String arithmeticOperand(String op,String a , String b )
     {
         t++;
-        code[pc] = new TacCode(op,"$t" + t,a,b);
-        System.out.println(code[pc]);
-        pc++;
+        System.out.printf("%s %s,%s,%s \n",op,"$t"+t,a,b);
         return "$t"+t;
     }
     void assign(String a , String b)
     {
-        code[pc]=new TacCode("=",a,b);
-        System.out.println(code[pc]);
-        pc++;
+        code[++pc]=new TacCode("=",a,b);
     }
 }

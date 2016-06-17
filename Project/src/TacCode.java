@@ -18,4 +18,15 @@ public class TacCode {
         this.opr2 = opr2;
         this.opr3 = opr3;
     }
+    void set(String opCode,String opr1,String opr2,String opr3){
+        this.opCode = opCode;
+        this.opr1 = opr1;
+        this.opr2 = opr2;
+        this.opr3 = opr3;
+    }
+
+    @Override
+    public String toString() {
+        return opCode + " " + opr1 + " " + opr2 + " " + opr3;
+    }
 }

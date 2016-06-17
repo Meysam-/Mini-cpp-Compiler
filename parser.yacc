@@ -14,7 +14,8 @@ import java.io.*;
 %token <sval> SC
 %token <obj> BC
 
-$type <sval> expr
+%type <sval> expr
+%type <sval> variable
 
 %right '='
 %left OR
@@ -218,7 +219,7 @@ expr:	expr '+' expr {$$ = cg.arithmeticOperand("+",$1,$3);}
 	|	SIZEOF '(' typee ')'
 	;
 
-variable:	ID opt_full_brackets %prec fuck {System.out.println("myDebug: seen an id name and brackets");}
+variable:	ID opt_full_brackets %prec fuck {$$ = $1}
 		|	ID opt_full_brackets '.' variable %prec fuck
 		|   variable_
 		;

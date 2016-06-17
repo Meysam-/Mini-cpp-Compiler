@@ -394,9 +394,9 @@ state 22
 	'~'  shift 34
 	.  error
 
-	var_dcl_cnts  goto 35
-	var_dcl_cnt  goto 36
-	variable  goto 37
+	variable  goto 35
+	var_dcl_cnts  goto 36
+	var_dcl_cnt  goto 37
 	variable_  goto 38
 
 
@@ -431,9 +431,9 @@ state 26
 	'~'  shift 34
 	.  error
 
+	variable  goto 35
 	var_dcl_cnts  goto 43
-	var_dcl_cnt  goto 36
-	variable  goto 37
+	var_dcl_cnt  goto 37
 	variable_  goto 38
 
 
@@ -544,30 +544,30 @@ state 34
 
 
 state 35
-	var_dcl : typee var_dcl_cnts .  (35)
-	var_dcl_cnts : var_dcl_cnts . ',' var_dcl_cnt  (38)
-
-	','  shift 50
-	';'  reduce 35
-
-
-state 36
-	var_dcl_cnts : var_dcl_cnt .  (37)
-
-	.  reduce 37
-
-
-state 37
 	var_dcl_cnt : variable .  (39)
 	var_dcl_cnt : variable . '=' expr  (40)
 	variable_ : variable . DEC  (107)
 	variable_ : variable . INC  (108)
 
-	DEC  shift 51
-	INC  shift 52
-	'='  shift 53
+	DEC  shift 50
+	INC  shift 51
+	'='  shift 52
 	';'  reduce 39
 	','  reduce 39
+
+
+state 36
+	var_dcl : typee var_dcl_cnts .  (35)
+	var_dcl_cnts : var_dcl_cnts . ',' var_dcl_cnt  (38)
+
+	','  shift 53
+	';'  reduce 35
+
+
+state 37
+	var_dcl_cnts : var_dcl_cnt .  (37)
+
+	.  reduce 37
 
 
 state 38
@@ -642,7 +642,7 @@ state 43
 	var_dcl : CONST typee var_dcl_cnts .  (36)
 	var_dcl_cnts : var_dcl_cnts . ',' var_dcl_cnt  (38)
 
-	','  shift 50
+	','  shift 53
 	';'  reduce 36
 
 
@@ -731,6 +731,44 @@ state 49
 
 
 state 50
+	variable_ : variable DEC .  (107)
+
+	.  reduce 107
+
+
+state 51
+	variable_ : variable INC .  (108)
+
+	.  reduce 108
+
+
+state 52
+	var_dcl_cnt : variable '=' . expr  (40)
+
+	SIZEOF  shift 64
+	DEC  shift 31
+	INC  shift 32
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
+	'~'  shift 34
+	'('  shift 74
+	.  error
+
+	expr  goto 75
+	variable  goto 76
+	variable_  goto 38
+	method_call  goto 77
+	const_val  goto 78
+
+
+state 53
 	var_dcl_cnts : var_dcl_cnts ',' . var_dcl_cnt  (38)
 
 	DEC  shift 31
@@ -739,47 +777,9 @@ state 50
 	'~'  shift 34
 	.  error
 
-	var_dcl_cnt  goto 64
-	variable  goto 37
+	variable  goto 35
+	var_dcl_cnt  goto 79
 	variable_  goto 38
-
-
-state 51
-	variable_ : variable DEC .  (107)
-
-	.  reduce 107
-
-
-state 52
-	variable_ : variable INC .  (108)
-
-	.  reduce 108
-
-
-state 53
-	var_dcl_cnt : variable '=' . expr  (40)
-
-	SIZEOF  shift 65
-	DEC  shift 31
-	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
-	'~'  shift 34
-	'('  shift 75
-	.  error
-
-	variable  goto 76
-	expr  goto 77
-	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
 
 
 state 54
@@ -829,9 +829,9 @@ state 59
 	'~'  shift 34
 	.  error
 
-	var_dcl_cnts  goto 35
-	var_dcl_cnt  goto 36
-	variable  goto 37
+	variable  goto 35
+	var_dcl_cnts  goto 36
+	var_dcl_cnt  goto 37
 	variable_  goto 38
 
 
@@ -868,27 +868,27 @@ state 61
 state 62
 	opt_full_brackets : opt_full_brackets '[' . expr ']'  (42)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 87
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 63
@@ -905,31 +905,25 @@ state 63
 
 
 state 64
-	var_dcl_cnts : var_dcl_cnts ',' var_dcl_cnt .  (38)
-
-	.  reduce 38
-
-
-state 65
 	expr : SIZEOF . '(' typee ')'  (100)
 
 	'('  shift 89
 	.  error
 
 
-state 66
+state 65
 	const_val : IC .  (109)
 
 	.  reduce 109
 
 
-state 67
+state 66
 	const_val : RC .  (110)
 
 	.  reduce 110
 
 
-state 68
+state 67
 	method_call : ID . '(' opt_parameters ')'  (61)
 	variable : ID . opt_full_brackets  (101)
 	variable : ID . opt_full_brackets '.' variable  (102)
@@ -965,158 +959,129 @@ state 68
 	opt_full_brackets  goto 48
 
 
-state 69
+state 68
 	const_val : CC .  (111)
 
 	.  reduce 111
 
 
-state 70
+state 69
 	const_val : SC .  (113)
 
 	.  reduce 113
 
 
-state 71
+state 70
 	const_val : BC .  (112)
 
 	.  reduce 112
 
 
-state 72
+state 71
 	expr : '+' . expr  (98)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 91
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
+
+
+state 72
+	expr : '-' . expr  (97)
+
+	SIZEOF  shift 64
+	DEC  shift 31
+	INC  shift 32
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
+	'~'  shift 34
+	'('  shift 74
+	.  error
+
+	expr  goto 92
+	variable  goto 76
+	variable_  goto 38
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 73
-	expr : '-' . expr  (97)
+	expr : '!' . expr  (99)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
+	expr  goto 93
 	variable  goto 76
-	expr  goto 92
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 74
-	expr : '!' . expr  (99)
+	expr : '(' . expr ')'  (93)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
+	expr  goto 94
 	variable  goto 76
-	expr  goto 93
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 75
-	expr : '(' . expr ')'  (93)
-
-	SIZEOF  shift 65
-	DEC  shift 31
-	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
-	'~'  shift 34
-	'('  shift 75
-	.  error
-
-	variable  goto 76
-	expr  goto 94
-	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
-
-
-state 76
-	expr : variable .  (95)
-	variable_ : variable . DEC  (107)
-	variable_ : variable . INC  (108)
-
-	DEC  shift 51
-	INC  shift 52
-	EQ  reduce 95
-	NE  reduce 95
-	LE  reduce 95
-	GE  reduce 95
-	AND  reduce 95
-	OR  reduce 95
-	'|'  reduce 95
-	'^'  reduce 95
-	'&'  reduce 95
-	'<'  reduce 95
-	'>'  reduce 95
-	'+'  reduce 95
-	'-'  reduce 95
-	'*'  reduce 95
-	'/'  reduce 95
-	'%'  reduce 95
-	';'  reduce 95
-	')'  reduce 95
-	','  reduce 95
-	']'  reduce 95
-
-
-state 77
 	var_dcl_cnt : variable '=' expr .  (40)
 	expr : expr . '+' expr  (77)
 	expr : expr . '-' expr  (78)
@@ -1155,16 +1120,51 @@ state 77
 	','  reduce 40
 
 
-state 78
+state 76
+	expr : variable .  (95)
+	variable_ : variable . DEC  (107)
+	variable_ : variable . INC  (108)
+
+	DEC  shift 50
+	INC  shift 51
+	EQ  reduce 95
+	NE  reduce 95
+	LE  reduce 95
+	GE  reduce 95
+	AND  reduce 95
+	OR  reduce 95
+	'|'  reduce 95
+	'^'  reduce 95
+	'&'  reduce 95
+	'<'  reduce 95
+	'>'  reduce 95
+	'+'  reduce 95
+	'-'  reduce 95
+	'*'  reduce 95
+	'/'  reduce 95
+	'%'  reduce 95
+	';'  reduce 95
+	')'  reduce 95
+	','  reduce 95
+	']'  reduce 95
+
+
+state 77
 	expr : method_call .  (94)
 
 	.  reduce 94
 
 
-state 79
+state 78
 	expr : const_val .  (96)
 
 	.  reduce 96
+
+
+state 79
+	var_dcl_cnts : var_dcl_cnts ',' var_dcl_cnt .  (38)
+
+	.  reduce 38
 
 
 state 80
@@ -1311,29 +1311,29 @@ state 90
 	method_call : ID '(' . opt_parameters ')'  (61)
 	opt_parameters : .  (62)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	')'  reduce 62
 
-	variable  goto 76
 	expr  goto 122
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
+	method_call  goto 77
 	opt_parameters  goto 123
 	parameters  goto 124
-	const_val  goto 79
+	const_val  goto 78
 
 
 state 91
@@ -1444,417 +1444,417 @@ state 94
 state 95
 	expr : expr EQ . expr  (89)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 126
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 96
 	expr : expr NE . expr  (90)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 127
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 97
 	expr : expr LE . expr  (92)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 128
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 98
 	expr : expr GE . expr  (91)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 129
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 99
 	expr : expr AND . expr  (87)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 130
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 100
 	expr : expr OR . expr  (88)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 131
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 101
 	expr : expr '|' . expr  (82)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 132
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 102
 	expr : expr '^' . expr  (84)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 133
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 103
 	expr : expr '&' . expr  (83)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 134
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 104
 	expr : expr '<' . expr  (86)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 135
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 105
 	expr : expr '>' . expr  (85)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 136
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 106
 	expr : expr '+' . expr  (77)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 137
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 107
 	expr : expr '-' . expr  (78)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 138
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 108
 	expr : expr '*' . expr  (79)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 139
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 109
 	expr : expr '/' . expr  (80)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 140
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 110
 	expr : expr '%' . expr  (81)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 141
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 111
@@ -1897,10 +1897,10 @@ state 112
 	'{'  shift 112
 	'}'  reduce 44
 
-	var_dcl  goto 153
+	variable  goto 153
+	var_dcl  goto 154
 	typee  goto 59
-	block  goto 154
-	variable  goto 155
+	block  goto 155
 	block_content  goto 156
 	statement  goto 157
 	assignment  goto 158
@@ -2631,29 +2631,29 @@ state 142
 	statement : RETURN . sc  (53)
 	statement : RETURN . expr sc  (54)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
 	';'  shift 27
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	sc  goto 169
+	expr  goto 169
 	variable  goto 76
-	expr  goto 170
+	sc  goto 170
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 143
@@ -2751,15 +2751,26 @@ state 152
 
 
 state 153
+	assignment : variable . '=' expr  (60)
+	variable_ : variable . DEC  (107)
+	variable_ : variable . INC  (108)
+
+	DEC  shift 50
+	INC  shift 51
+	'='  shift 181
+	.  error
+
+
+state 154
 	block_content : var_dcl . sc block_content  (45)
 
 	';'  shift 27
 	.  error
 
-	sc  goto 181
+	sc  goto 182
 
 
-state 154
+state 155
 	block_content : block . block_content  (47)
 	block_content : .  (44)
 
@@ -2790,11 +2801,11 @@ state 154
 	'{'  shift 112
 	'}'  reduce 44
 
-	var_dcl  goto 153
+	variable  goto 153
+	var_dcl  goto 154
 	typee  goto 59
-	block  goto 154
-	variable  goto 155
-	block_content  goto 182
+	block  goto 155
+	block_content  goto 183
 	statement  goto 157
 	assignment  goto 158
 	variable_  goto 159
@@ -2803,17 +2814,6 @@ state 154
 	loop_stmt  goto 162
 	goto  goto 163
 	label  goto 164
-
-
-state 155
-	assignment : variable . '=' expr  (60)
-	variable_ : variable . DEC  (107)
-	variable_ : variable . INC  (108)
-
-	DEC  shift 51
-	INC  shift 52
-	'='  shift 183
-	.  error
 
 
 state 156
@@ -2854,10 +2854,10 @@ state 157
 	'{'  shift 112
 	'}'  reduce 44
 
-	var_dcl  goto 153
+	variable  goto 153
+	var_dcl  goto 154
 	typee  goto 59
-	block  goto 154
-	variable  goto 155
+	block  goto 155
 	block_content  goto 185
 	statement  goto 157
 	assignment  goto 158
@@ -2950,36 +2950,30 @@ state 167
 state 168
 	parameters : parameters ',' . expr  (65)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 191
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 169
-	statement : RETURN sc .  (53)
-
-	.  reduce 53
-
-
-state 170
 	statement : RETURN expr . sc  (54)
 	expr : expr . '+' expr  (77)
 	expr : expr . '-' expr  (78)
@@ -3020,6 +3014,12 @@ state 170
 	sc  goto 192
 
 
+state 170
+	statement : RETURN sc .  (53)
+
+	.  reduce 53
+
+
 state 171
 	statement : BREAK sc .  (57)
 
@@ -3054,27 +3054,27 @@ state 174
 	cond_stmt : IF '(' . expr ')' block  (66)
 	cond_stmt : IF '(' . expr ')' block ELSE block  (67)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 194
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 175
@@ -3134,6 +3134,32 @@ state 180
 
 
 state 181
+	assignment : variable '=' . expr  (60)
+
+	SIZEOF  shift 64
+	DEC  shift 31
+	INC  shift 32
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
+	'~'  shift 34
+	'('  shift 74
+	.  error
+
+	expr  goto 200
+	variable  goto 76
+	variable_  goto 38
+	method_call  goto 77
+	const_val  goto 78
+
+
+state 182
 	block_content : var_dcl sc . block_content  (45)
 	block_content : .  (44)
 
@@ -3164,11 +3190,11 @@ state 181
 	'{'  shift 112
 	'}'  reduce 44
 
-	var_dcl  goto 153
+	variable  goto 153
+	var_dcl  goto 154
 	typee  goto 59
-	block  goto 154
-	variable  goto 155
-	block_content  goto 200
+	block  goto 155
+	block_content  goto 201
 	statement  goto 157
 	assignment  goto 158
 	variable_  goto 159
@@ -3179,36 +3205,10 @@ state 181
 	label  goto 164
 
 
-state 182
+state 183
 	block_content : block block_content .  (47)
 
 	.  reduce 47
-
-
-state 183
-	assignment : variable '=' . expr  (60)
-
-	SIZEOF  shift 65
-	DEC  shift 31
-	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
-	'~'  shift 34
-	'('  shift 75
-	.  error
-
-	variable  goto 76
-	expr  goto 201
-	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
 
 
 state 184
@@ -3386,12 +3386,6 @@ state 199
 
 
 state 200
-	block_content : var_dcl sc block_content .  (45)
-
-	.  reduce 45
-
-
-state 201
 	assignment : variable '=' expr .  (60)
 	expr : expr . '+' expr  (77)
 	expr : expr . '-' expr  (78)
@@ -3430,6 +3424,12 @@ state 201
 	')'  reduce 60
 
 
+state 201
+	block_content : var_dcl sc block_content .  (45)
+
+	.  reduce 45
+
+
 state 202
 	statement : SIZEOF '(' typee ')' . sc  (59)
 
@@ -3460,27 +3460,27 @@ state 205
 	loop_stmt : FOR '(' opt_var_dcls sc . expr sc assignment ')' block  (71)
 	loop_stmt : FOR '(' opt_var_dcls sc . expr sc expr ')' block  (72)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 211
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 206
@@ -3493,27 +3493,27 @@ state 206
 state 207
 	loop_stmt : REPEAT block UNTIL '(' . expr ')' sc  (73)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 76
 	expr  goto 213
+	variable  goto 76
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 208
@@ -3670,28 +3670,28 @@ state 216
 	loop_stmt : FOR '(' opt_var_dcls sc expr sc . assignment ')' block  (71)
 	loop_stmt : FOR '(' opt_var_dcls sc expr sc . expr ')' block  (72)
 
-	SIZEOF  shift 65
+	SIZEOF  shift 64
 	DEC  shift 31
 	INC  shift 32
-	IC  shift 66
-	RC  shift 67
-	ID  shift 68
-	CC  shift 69
-	SC  shift 70
-	BC  shift 71
-	'+'  shift 72
-	'-'  shift 73
-	'!'  shift 74
+	IC  shift 65
+	RC  shift 66
+	ID  shift 67
+	CC  shift 68
+	SC  shift 69
+	BC  shift 70
+	'+'  shift 71
+	'-'  shift 72
+	'!'  shift 73
 	'~'  shift 34
-	'('  shift 75
+	'('  shift 74
 	.  error
 
-	variable  goto 221
-	expr  goto 222
+	expr  goto 221
+	variable  goto 222
 	assignment  goto 223
 	variable_  goto 38
-	method_call  goto 78
-	const_val  goto 79
+	method_call  goto 77
+	const_val  goto 78
 
 
 state 217
@@ -3728,34 +3728,6 @@ state 220
 
 
 state 221
-	assignment : variable . '=' expr  (60)
-	expr : variable .  (95)
-	variable_ : variable . DEC  (107)
-	variable_ : variable . INC  (108)
-
-	DEC  shift 51
-	INC  shift 52
-	'='  shift 183
-	EQ  reduce 95
-	NE  reduce 95
-	LE  reduce 95
-	GE  reduce 95
-	AND  reduce 95
-	OR  reduce 95
-	'|'  reduce 95
-	'^'  reduce 95
-	'&'  reduce 95
-	'<'  reduce 95
-	'>'  reduce 95
-	'+'  reduce 95
-	'-'  reduce 95
-	'*'  reduce 95
-	'/'  reduce 95
-	'%'  reduce 95
-	')'  reduce 95
-
-
-state 222
 	loop_stmt : FOR '(' opt_var_dcls sc expr sc expr . ')' block  (72)
 	expr : expr . '+' expr  (77)
 	expr : expr . '-' expr  (78)
@@ -3792,6 +3764,34 @@ state 222
 	'%'  shift 110
 	')'  shift 227
 	.  error
+
+
+state 222
+	assignment : variable . '=' expr  (60)
+	expr : variable .  (95)
+	variable_ : variable . DEC  (107)
+	variable_ : variable . INC  (108)
+
+	DEC  shift 50
+	INC  shift 51
+	'='  shift 181
+	EQ  reduce 95
+	NE  reduce 95
+	LE  reduce 95
+	GE  reduce 95
+	AND  reduce 95
+	OR  reduce 95
+	'|'  reduce 95
+	'^'  reduce 95
+	'&'  reduce 95
+	'<'  reduce 95
+	'>'  reduce 95
+	'+'  reduce 95
+	'-'  reduce 95
+	'*'  reduce 95
+	'/'  reduce 95
+	'%'  reduce 95
+	')'  reduce 95
 
 
 state 223

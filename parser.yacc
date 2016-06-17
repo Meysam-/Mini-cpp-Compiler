@@ -154,7 +154,7 @@ statement:	assignment sc
 		|   SIZEOF '(' typee ')' sc
 		;
 
-assignment:     variable '=' expr
+assignment:     variable '=' expr{$$ = cg.assign($1,$3);}
 		  ;
 
 method_call:	ID '(' opt_parameters ')' 

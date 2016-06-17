@@ -154,7 +154,7 @@ statement:	assignment sc
 		|   SIZEOF '(' typee ')' sc
 		;
 
-assignment:     variable '=' expr{$$ = cg.assign($1,$3);}
+assignment:     variable '=' expr
 		  ;
 
 method_call:	ID '(' opt_parameters ')' 
@@ -190,23 +190,23 @@ goto:	GOTO ID
 label:	ID ':' 
 	 ;
 
-expr:	expr '+' expr
-	|   expr '-' expr
-	|   expr '*' expr
-	|   expr '/' expr
-	|   expr '%' expr
-	|   expr '|' expr
-	|   expr '&' expr
-	|   expr '^' expr
-	|   expr '>' expr
-	|   expr '<' expr
-	|   expr AND expr
-	|   expr OR expr
-	|   expr EQ expr
-	|   expr NE expr
-	|   expr GE expr
-	|   expr LE expr
-	|	'(' expr ')'
+expr:	expr '+' expr {$$ = cg.arithmeticOperand("+",$1,$3);}
+	|   expr '-' expr {$$ = cg.arithmeticOperand("-",$1,$3);}
+	|   expr '*' expr {$$ = cg.arithmeticOperand("*",$1,$3);}
+	|   expr '/' expr {$$ = cg.arithmeticOperand("/",$1,$3);}
+	|   expr '%' expr {$$ = cg.arithmeticOperand("%",$1,$3);}
+	|   expr '|' expr {$$ = cg.arithmeticOperand("|",$1,$3);}
+	|   expr '&' expr {$$ = cg.arithmeticOperand("&",$1,$3);}
+	|   expr '^' expr {$$ = cg.arithmeticOperand("^",$1,$3);}
+	|   expr '>' expr {$$ = cg.arithmeticOperand(">",$1,$3);}
+	|   expr '<' expr {$$ = cg.arithmeticOperand("<",$1,$3);}
+	|   expr AND expr {$$ = cg.arithmeticOperand("&&",$1,$3);}
+	|   expr OR expr {$$ = cg.arithmeticOperand("||",$1,$3);}
+	|   expr EQ expr {$$ = cg.arithmeticOperand("==",$1,$3);}
+	|   expr NE expr {$$ = cg.arithmeticOperand("!=",$1,$3);}
+	|   expr GE expr {$$ = cg.arithmeticOperand(">=",$1,$3);}
+	|   expr LE expr {$$ = cg.arithmeticOperand("<=",$1,$3);}
+	|	'(' expr ')' 
 	|	method_call
 	|	variable	
 	|	const_val

@@ -10,9 +10,9 @@ this.yyparser = yyparser;
 }
 %}
 
-IC = [+-]? [0-9]+
-RC = [+-]?(([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*))([eE][+-]?[0-9]+)?
-HC = [-+]? "0x" [0-9a-fA-F]+
+IC = [0-9]+
+RC = (([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*))([eE][+-]?[0-9]+)?
+HC = "0x"[0-9a-fA-F]+
 BC = "true"|"false"
 CC = "'" ([^\\]  | "\\" [rnt']) "'"
 SC = \"(([^\\\"])|(\\[rnt\\\"]))*\"
@@ -23,6 +23,42 @@ WS = [ \n\t\r]+
 
 
 %%
+
+
+"bool" { return Parser.BOOL; }
+"break" {return Parser.BREAK; }
+"case" {return Parser.CASE; }
+"char" {return Parser.CHAR; }
+"const" {return Parser.CONST; }
+"continue" {return Parser.CONTINUE; }
+"default" {return Parser.DEFAULT; }
+"double" {return Parser.DOUBLE; }
+"else" {return Parser.ELSE; }
+"extern" {return Parser.EXTERN; }
+"function" {return Parser.FUNCTION; }
+"float" {return Parser.FLOAT; }
+"for" {return Parser.FOR; }
+"foreach" {return Parser.FOREACH; }
+"goto" {return Parser.GOTO; }
+"if" {return Parser.IF; }
+"input" {return Parser.INPUT; }
+"int" {return Parser.INT; }
+"in" {return Parser.IN; }
+"long" {return Parser.LONG; }
+"output" {return Parser.OUTPUT; }
+"of" {return Parser.OF; }
+"return" {return Parser.RETURN; }
+"record" {return Parser.RECORD; }
+"repeat" {return Parser.REPEAT; }
+"sizeof" {return Parser.SIZEOF; }
+"static" {return Parser.STATIC; }
+"string" {return Parser.STRING; }
+"switch" {return Parser.SWITCH; }
+"until" {return Parser.UNTIL; }
+
+//"true" {return Parser.TRUE; }
+//"false" {return Parser.FALSE; }
+
 /* operators */
 "==" { return Parser.EQ; }
 "!=" { return Parser.NE; }
@@ -54,10 +90,10 @@ WS = [ \n\t\r]+
 "." |
 "," |
 ":" |
-";" { System.out.println(yytext()); }
+";" { return (int)yycharat(0); }
 
 
-{RC} { yyparser.yylval = new ParserVal(Double.ParseDouble(yytext()));
+{RC} { yyparser.yylval = new ParserVal(Double.parseDouble(yytext()));
 	return Parser.RC; }
 
 {IC} { yyparser.yylval = new ParserVal(Integer.parseInt(yytext()));
@@ -97,7 +133,7 @@ WS = [ \n\t\r]+
 		return Parser.CC;
 	}
 
-{NL} { return Parser.NL; }
+{NL} { }
 
 {ID} { yyparser.yylval = new ParserVal(yytext());
 	return Parser.ID; }
@@ -108,38 +144,5 @@ WS = [ \n\t\r]+
 {CM} {}
 {WS} {}
 
-
-"bool" { return Parser.BOOL; }
-"break" {return Parser.BREAK; }
-"case" {return Parser.CASE; }
-"char" {return Parser.CHAR; }
-"const" {return Parser.CONST; }
-"continue" {return Parser.CONTINUE; }
-"default" {return Parser.DEFAULT; }
-"double" {return Parser.DOUBLE; }
-"else" {return Parser.ELSE; }
-"extern" {return Parser.EXTERN; }
-"false" {return Parser.FALSE; }
-"function" {return Parser.FUNCTION; }
-"float" {return Parser.FLOAT; }
-"for" {return Parser.FOR; }
-"foreach" {return Parser.FOREACH; }
-"goto" {return Parser.GOTO; }
-"if" {return Parser.IF; }
-"input" {return Parser.INPUT; }
-"int" {return Parser.INT; }
-"in" {return Parser.IN; }
-"long" {return Parser.LONG; }
-"output" {return Parser.OUTPUT; }
-"of" {return Parser.OF; }
-"return" {return Parser.RETUEN; }
-"record" {return Parser.RECORD; }
-"repeat" {return Parser.REPEAT; }
-"sizeof" {return Parser.SIZEOF; }
-"static" {return Parser.STATIC; }
-"string" {return Parser.STRING; }
-"switch" {return Parser.SWITCH; }
-"true" {return Parser.TRUE; }
-"until" {return Parser.UNTIL; }
 
 [^] { System.err.println("Lexical error! " + yytext()); }

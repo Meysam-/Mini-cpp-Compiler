@@ -2,9 +2,9 @@
 import java.io.*;
 %}
 
-%token EXTERN PROCEDURE INT BOOL FLOAT LONG CHAR DOUBLE STRING VOID AUTO RECORD CONST 
+%token EXTERN PROCEDURE FUNCTION INT BOOL FLOAT LONG CHAR DOUBLE STRING VOID AUTO RECORD CONST 
 %token RETURN BREAK CONTINUE SIZEOF IF ELSE SWITCH OF DEFAULT CASE FOR FOREACH REPEAT 
-%token UNTIL GOTO EQ NE LE GE AND OR DEC INC IN
+%token UNTIL INPUT OUTPUT STATIC GOTO EQ NE LE GE AND OR DEC INC IN
 %token NL /* newline */
 %token <ival> IC
 %token <dval> RC
@@ -49,13 +49,14 @@ import java.io.*;
 
 
 
-program:	// empty
-	|	program var_dcl sc
-	|	program func_proc
-	|	program struct_dec
+program:	// empty  
+	|	var_dcl sc program
+	|	func_proc  program
+	|	struct_dec program
 	;
 
-sc:	';' ;
+sc:	';' {System.out.println("semi solon detected!");}
+  ;
 
 func_proc:	func_dcl
 		 |  extern_dcl 
@@ -74,8 +75,8 @@ opt_arguments:	/* empty */
 			 |  arguments 
 			 ;
 
-arguments:	typee ID opt_brackets 
-		|	arguments ',' typee ID opt_brackets 
+arguments:	typee ID opt_full_brackets 
+		|	arguments ',' typee ID opt_full_brackets 
 		;
 
 opt_brackets: /* empty */
@@ -87,7 +88,7 @@ proc_dcl:	PROCEDURE ID '(' opt_arguments ')' sc
 		|	PROCEDURE ID '(' opt_arguments ')' block
 		;
 
-typee:	INT 
+typee:	INT {System.out.println("myDebug: seen a type");}
   | 	BOOL 
   | 	FLOAT 
   | 	LONG 
@@ -109,7 +110,7 @@ var_dcls:	var_dcl sc
 
 /* for FOR loop */
 opt_var_dcls:	/* empty */ 
-	   	    | var_dcls
+	   	    | var_dcl
 	   	    ;
 
 var_dcl:	typee var_dcl_cnts 
@@ -126,7 +127,6 @@ var_dcl_cnt:	variable
 		   ;
 
 
-//  [expr]*
 opt_full_brackets: /* empty */ 
 				|	opt_full_brackets '[' expr ']' 
 				;
@@ -134,13 +134,14 @@ opt_full_brackets: /* empty */
 block:	'{' block_content '}' 
 	 ;
 
-// {var_dcl|statement}*
 block_content:	// empty
-			 |	block_content var_dcl sc
-			 |	block_content statement
+			 |	 var_dcl sc block_content
+			 |	 statement  block_content
+			 |   block      block_content
 			 ;
 
 statement:	assignment sc
+		|	variable_ sc
 		|	method_call sc
 		|	cond_stmt
 		|	loop_stmt
@@ -209,12 +210,13 @@ expr:	expr '+' expr
 	|	method_call
 	|	variable	
 	|	const_val
-	|	'-' expr 
+	|	'-' expr %prec '!'
+	|	'+' expr %prec '!'
 	|	'!' expr
 	|	SIZEOF '(' typee ')'
 	;
 
-variable:	ID opt_full_brackets %prec fuck
+variable:	ID opt_full_brackets %prec fuck {System.out.println("myDebug: seen an id name and brackets");}
 		|	ID opt_full_brackets '.' variable %prec fuck
 		|   variable_
 		;

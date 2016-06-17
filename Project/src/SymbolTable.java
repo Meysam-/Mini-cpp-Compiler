@@ -8,19 +8,16 @@ public class SymbolTable
 {
     Map<String , Integer> table;
 
-    public SymbolTable()
-    {
+    public SymbolTable(){
         table = new TreeMap<String, Integer>();
     }
-    public int getValue(String id)
-    {
+    public int getValue(String id){
         if(table.containsKey(id))
            return table.get(id);
         table.put(id,0);
         return 0;
     }
-    public void setValue(String id,Double Value)
-    {
+    public void setValue(String id,Double Value){
         table.put(id,Value.intValue());
     }
 }

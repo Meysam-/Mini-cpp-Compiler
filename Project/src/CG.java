@@ -1,10 +1,23 @@
+import java.util.ArrayList;
+
 /**
  * Created by Meysam Kazemi on 6/3/2016.
  */
 public class CG
 {
-    int t =0 ;
-   // SymbolTable symbolTable = new SymbolTable();
+    TacCode[] code;
+    int pc;
+    int t;
+    SymbolTable symbolTable;
+    CG(){
+        code = new TacCode[500];
+        symbolTable = new SymbolTable();
+        for(TacCode val:code){
+            val = new TacCode();
+        }
+        pc = 0;
+        t = 0;
+    }
     String arithmeticOperand(String op,String a , String b )
     {
         t++;

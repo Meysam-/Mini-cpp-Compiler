@@ -13,10 +13,6 @@ public class CG
     CG(){
         code = new TacCode[500];
         symbolTable = new SymbolTable();
-        //sducauic
-        for(TacCode val:code){
-            val = new TacCode();
-        }
         pc = 0;
         t = 0;
     }
@@ -28,6 +24,6 @@ public class CG
     }
     void assign(String a , String b)
     {
-        System.out.printf("= %s,%s\n",a,b);
+        code[++pc]=new TacCode("=",a,b);
     }
 }

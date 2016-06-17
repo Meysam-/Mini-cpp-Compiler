@@ -12,6 +12,11 @@ public class TacCode {
     TacCode(String opCode){
         this.opCode = opCode;
     }
+    TacCode(String opCode,String opr1,String opr2){
+        this.opCode = opCode;
+        this.opr1 = opr1;
+        this.opr2 = opr2;
+    }
     TacCode(String opCode,String opr1,String opr2,String opr3){
         this.opCode = opCode;
         this.opr1 = opr1;

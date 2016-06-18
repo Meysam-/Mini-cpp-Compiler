@@ -116,7 +116,7 @@ WS = [ \n\t\r]+
 {HC} { yyparser.yylval = new ParserVal((yycharat(0) == '-' ? -1 : 1) * Integer.parseInt((yytext().substring(2 + ( yytext().charAt(0) == '0' ? 0 : 1))), 16));	// hex digits at 3rd or 4th char
 	return Parser.IC; }
 
-{BC} {yyparser.yylval = new ParserVal(Boolean.parseBoolean(yytext()));
+{BC} {yyparser.yylval = new ParserVal((yytext().equals("true"))?"1":"0");
 	return Parser.BC;}
 
 {CC} { if (yycharat(1) == '\\') {

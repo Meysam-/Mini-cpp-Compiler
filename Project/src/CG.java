@@ -6,35 +6,35 @@ import java.util.Stack;
  */
 public class CG
 {
-
-    int dclCount=0;
     TacCode[] code;
     int pc;
     int t;
     SymbolTable symbolTable;
     int label;
     Stack<Integer> labelStack;
+    ArrayList<Integer> dclNoTypeAssigned;
     CG(){
         code = new TacCode[500];
+        dclNoTypeAssigned=new ArrayList<Integer>();
         labelStack=new Stack<Integer>();
         symbolTable = new SymbolTable();
         pc = 0;
         t = 0;
         label=0;
     }
-    String arithmeticOperand(String op,String a , String b )
+
+    void arithmeticOperand(String op,String res,String a , String b )
     {
-        t++;
-        code[pc] = new TacCode(op,"$t" + t,a,b);
+        code[pc] = new TacCode(op,res,a,b);
         System.out.println(code[pc]);
         pc++;
-        return "$t"+t;
     }
+
     void assign(String a , String b)
     {
         if(symbolTable.lookup(a)==null)
             m2Error(a + " not declared in this scope");
-        if(symbolTable.lookup(b)==null)
+        if(b.matches("[a-zA-Z_] [0-9a-zA-Z_]*") && symbolTable.lookup(b)==null)
             m2Error(b + " not declared in this scope");
 
         code[pc]=new TacCode("=",a,b);
@@ -48,19 +48,19 @@ public class CG
             m2Error("redeclare: " + name);
         symbolTable.insert(name,0);
         code[pc]=new TacCode("VAR",name,"");
+        dclNoTypeAssigned.add(pc);
         pc++;
-        this.dclCount++;
     }
     void declarationSetType(String type)
     {
         int sizeType=Integer.parseInt(type);
 
-        for(int i=pc-1;i>=pc-dclCount;i--){
+        for(int i:dclNoTypeAssigned){
             code[i].opr2=type;
             symbolTable.table.get(code[i].opr1).setSize(sizeType);
             System.out.println(code[i]);
         }
-        this.dclCount=0;
+        this.dclNoTypeAssigned.clear();
     }
 
     void functionDeclaration(String name,String sizeOfOutput){
@@ -95,6 +95,12 @@ public class CG
         pc++;
     }
 
+    void retStm(String retVal){
+        code[pc] = new TacCode("RET",retVal,"");
+        pc++;
+        System.out.println(code[pc-1]);
+    }
+
     void ifState(String id)
     {
         code[pc]=new TacCode("JNZ","Label"+label,id);
@@ -126,6 +132,49 @@ public class CG
     void endElse()
     {
         code[pc]=new TacCode("LB","Label"+Integer.toString(labelStack.pop()),"");
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void for_start()
+    {
+        code[pc]=new TacCode("LB","Label"+label,"");
+        labelStack.push(label++);
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void for_middle(String id )
+    {
+        code[pc]=new TacCode("JNZ","Label"+label,id);
+        labelStack.push(label++);
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void for_end()
+    {
+        int ll=labelStack.pop();
+        code[pc]=new TacCode("JMP","Label"+Integer.toString(labelStack.pop()),"");
+        System.out.println(code[pc]);
+        pc++;
+
+        code[pc]=new TacCode("LB","Label"+Integer.toString(ll),"");
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void repeat_start()
+    {
+        code[pc]=new TacCode("LB","Label"+label,"");
+        labelStack.push(label++);
+        System.out.println(code[pc]);
+        pc++;
+    }
+
+    void repeat_end(String id)
+    {
+        code[pc]=new TacCode("JZ","Label"+Integer.toString(labelStack.pop()),id);
         System.out.println(code[pc]);
         pc++;
     }

@@ -1,0 +1,60 @@
+int func1;
+
+int func(int a,int b){
+    return a+b;
+}
+int start(){
+
+    int a;
+    if(true){
+        a++;
+    }
+    int b[7][10][5][5], c;
+     int i = func();
+     b[1][i][i][4] = 4;
+    Label1:
+    foreach(a in b){
+        ##a=a*b[1][1];
+        int forE = a;
+        if(a==2){
+        int insideIF;
+        }else{
+        int startSW;
+        switch(startSW) of:{
+        case 1:
+       {
+
+       }case 2:{
+
+       }
+       default:{
+       int default1;
+       }
+        }
+        int afterSW;
+        }
+
+    }
+
+    /#
+     L1:
+    for(int i = 0; i<13;i++)
+    {
+        if( a!=b)
+         {
+            a = a*a;
+            if(a == 2)
+            {
+                a = a *2;
+            }
+         }
+
+    }
+
+
+    if(func(a,10)==7){
+        a = 0;
+        goto L1;
+    }
+   #/
+}

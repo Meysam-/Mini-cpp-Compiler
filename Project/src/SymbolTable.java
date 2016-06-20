@@ -23,4 +23,7 @@ public class SymbolTable
     public void insert(String id,int type){
         table.put(id,new STVal(type,0));
     }
+    public void insert(String id ,STVal stVal){
+        table.put(id,stVal);
+    }
 }

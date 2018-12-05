@@ -1,7 +1,6 @@
-move Parser.java Project/src
+move Parser.java /Project/src
 yes
-move ParserVal.java Project/src
+move ParserVal.java /Project/src
 yes
-move Yylex.java Project/src
+move Yylex.java /Project/src
 yes
-

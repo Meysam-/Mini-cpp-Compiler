@@ -12,7 +12,10 @@ import java.io.*;
 %token <sval> ID
 %token <sval> CC
 %token <sval> SC
-%token <obj> BC
+%token <sval> BC
+
+%type <sval> expr typee opt_full_brackets parameters opt_parameters
+%type <sval> variable const_val method_call int_const
 
 %right '='
 %left OR
@@ -55,7 +58,7 @@ program:	// empty
 	|	struct_dec program
 	;
 
-sc:	';' {System.out.println("semi solon detected!");}
+sc:	';' {}
   ;
 
 func_proc:	func_dcl
@@ -64,8 +67,11 @@ func_proc:	func_dcl
 		 ;	
 
 
-func_dcl:	typee ID '(' opt_arguments ')' sc 
-		|	typee ID '(' opt_arguments ')' block
+func_dcl:	typee ID { cg.functionDeclaration($2,$1); } '(' opt_arguments ')' func_end { cg.endFunction($2); }
+		;
+
+func_end:   sc
+		|	block
 		;
 
 extern_dcl:	EXTERN typee ID sc ;
@@ -75,8 +81,8 @@ opt_arguments:	/* empty */
 			 |  arguments 
 			 ;
 
-arguments:	typee ID opt_full_brackets 
-		|	arguments ',' typee ID opt_full_brackets 
+arguments:	typee ID opt_full_brackets { cg.argument($1,$2,$3); }
+		|	arguments ',' typee ID opt_full_brackets { cg.argument($3,$4,$5); }
 		;
 
 opt_brackets: /* empty */
@@ -88,15 +94,15 @@ proc_dcl:	PROCEDURE ID '(' opt_arguments ')' sc
 		|	PROCEDURE ID '(' opt_arguments ')' block
 		;
 
-typee:	INT {System.out.println("myDebug: seen a type");}
-  | 	BOOL 
-  | 	FLOAT 
-  | 	LONG 
-  | 	CHAR 
-  | 	DOUBLE 
+typee:	INT {$$ = "4";}
+  | 	BOOL {$$ = "1";}
+  | 	FLOAT{$$ = "4";} 
+  | 	LONG {$$ = "8";}
+  | 	CHAR {$$ = "1";}
+  | 	DOUBLE {$$ = "8";}
   | 	ID       /* pre-defined type */
-  | 	STRING 
-  | 	VOID 	
+  | 	STRING {$$= "STR";}
+  | 	VOID {$$ = "0";}
   | 	AUTO 
   ; 
 
@@ -113,7 +119,7 @@ opt_var_dcls:	/* empty */
 	   	    | var_dcl
 	   	    ;
 
-var_dcl:	typee var_dcl_cnts 
+var_dcl:	typee var_dcl_cnts{cg.declarationSetType($1);}
 	   |	CONST typee var_dcl_cnts 
 	   ;
 
@@ -122,13 +128,13 @@ var_dcl_cnts:	 var_dcl_cnt
 			| 	 var_dcl_cnts ',' var_dcl_cnt 
 			;
 
-var_dcl_cnt:	variable 
-		   | 	variable '=' expr 
+var_dcl_cnt:	variable{ cg.declarationNoType($1,""); } 
+		   | 	variable '=' expr {cg.declarationNoType($1,$3);}
 		   ;
 
 
-opt_full_brackets: /* empty */ 
-				|	opt_full_brackets '[' expr ']' 
+opt_full_brackets: /* empty */ {$$ = "0";}
+				|	opt_full_brackets '[' expr ']' {$$ = $1 + "," + $3.split(",")[0];}
 				;
 
 block:	'{' block_content '}' 
@@ -141,12 +147,11 @@ block_content:	// empty
 			 ;
 
 statement:	assignment sc
-		|	variable_ sc
 		|	method_call sc
 		|	cond_stmt
 		|	loop_stmt
-		|	RETURN sc
-		|	RETURN expr sc
+		|	RETURN sc { cg.retStm(""); }
+		|	RETURN expr sc { cg.retStm($2); }
 		|	goto sc
 		|	label
 		|	BREAK sc
@@ -154,89 +159,91 @@ statement:	assignment sc
 		|   SIZEOF '(' typee ')' sc
 		;
 
-assignment:     variable '=' expr
+assignment:     variable '=' expr{cg.assign($1,$3);}
+		  |		variable_
 		  ;
 
-method_call:	ID '(' opt_parameters ')' 
+method_call:	ID '(' opt_parameters ')' { $$ = cg.funcCall($1,$3); }
 		   ;
 
-opt_parameters:	/* empty */ 
-			  | parameters  
+opt_parameters:	/* empty */ {$$ = "";}
+			  | parameters  {$$ = $1;}
 			  ;	
 
-parameters:	expr
-		|	parameters ',' expr
+parameters:	expr {$$ = cg.arr_calc_addr($1);}
+		|	parameters ',' expr {$$ = $1 + "," + cg.arr_calc_addr($3);}
 		;
 
-cond_stmt:	IF '(' expr ')' block
-		|	IF '(' expr ')' block ELSE block
-		|	SWITCH '(' ID ')' OF ':' '{' opt_cases DEFAULT ':' block '}'
-		;
+cond_stmt:  IF '(' expr ')' {cg.ifState($3);} block end_if
+    	 |  SWITCH '(' ID ')' OF ':' {cg.switch_start($3);} '{' opt_cases DEFAULT ':' {cg.switch_default();} block '}'{cg.switch_end();}
+    	 ;
+
+end_if:     {cg.endIfState();}
+      |		ELSE{ cg.startElse(); } block {cg.endElse();}
+      ;
 
 // [case cINT ':' block]*
 opt_cases: /* empty */ 
-		 | opt_cases CASE int_const ':' block 
+		 | opt_cases CASE int_const ':' {cg.switch_case($3);} block {cg.switch_case_end();} 
 		 ;
 
-loop_stmt:	FOR '(' opt_var_dcls sc expr sc assignment ')' block
-		|	FOR '(' opt_var_dcls sc expr sc expr ')' block
-		|	REPEAT block UNTIL '(' expr ')' sc
-		|	FOREACH '(' ID IN ID ')' block
-		;
+loop_stmt:  FOR '(' opt_var_dcls {cg.for_start();} sc expr {cg.saveInTemp=true;} sc assignment ')' {cg.for_middle($6);} block {cg.for_end();}
+    |  REPEAT {cg.repeat_start();} block UNTIL '(' expr ')' sc  {cg.repeat_end($6);}
+    |  FOREACH '(' ID IN ID ')' {cg.foreach_start($3,$5);} block {cg.foreach_end($3,$5);}
+    ;
 
-goto:	GOTO ID 
+goto:	GOTO ID { cg.jumpToLabel($2); }
 	;
 
-label:	ID ':' 
+label:	ID ':' { cg.setLabel($1); }
 	 ;
 
-expr:	expr '+' expr
-	|   expr '-' expr
-	|   expr '*' expr
-	|   expr '/' expr
-	|   expr '%' expr
-	|   expr '|' expr
-	|   expr '&' expr
-	|   expr '^' expr
-	|   expr '>' expr
-	|   expr '<' expr
-	|   expr AND expr
-	|   expr OR expr
-	|   expr EQ expr
-	|   expr NE expr
-	|   expr GE expr
-	|   expr LE expr
-	|	'(' expr ')'
-	|	method_call
-	|	variable	
+expr:	expr '+' expr {$$ = cg.arithmeticOperand("+",$1,$3);}
+	|   expr '-' expr {$$ = cg.arithmeticOperand("-",$1,$3);}
+	|   expr '*' expr {$$ = cg.arithmeticOperand("*",$1,$3);}
+	|   expr '/' expr {$$ = cg.arithmeticOperand("/",$1,$3);}
+	|   expr '%' expr {$$ = cg.arithmeticOperand("%",$1,$3);}
+	|   expr '|' expr {$$ = cg.arithmeticOperand("|",$1,$3);}
+	|   expr '&' expr {$$ = cg.arithmeticOperand("&",$1,$3);}
+	|   expr '^' expr {$$ = cg.arithmeticOperand("^",$1,$3);}
+	|   expr '>' expr {$$ = cg.arithmeticOperand(">",$1,$3);}
+	|   expr '<' expr {$$ = cg.arithmeticOperand("<",$1,$3);}
+	|   expr AND expr {$$ = cg.arithmeticOperand("&&",$1,$3);}
+	|   expr OR expr {$$ = cg.arithmeticOperand("||",$1,$3);}
+	|   expr EQ expr {$$ = cg.arithmeticOperand("==",$1,$3);}
+	|   expr NE expr {$$ = cg.arithmeticOperand("!=",$1,$3);}
+	|   expr GE expr {$$ = cg.arithmeticOperand(">=",$1,$3);}
+	|   expr LE expr {$$ = cg.arithmeticOperand("<=",$1,$3);}
+	|	'(' expr ')' {$$ = $2;}
+	|	method_call {$$ = $1;}
+	|	variable {$$=$1;}
 	|	const_val
-	|	'-' expr %prec '!'
-	|	'+' expr %prec '!'
+	|	'-' expr %prec '!' {$$ = cg.arithmeticOperand("*",$2,"#-1");}
+	|	'+' expr %prec '!' {$$ = $2;}
 	|	'!' expr
 	|	SIZEOF '(' typee ')'
 	;
 
-variable:	ID opt_full_brackets %prec fuck {System.out.println("myDebug: seen an id name and brackets");}
+variable:	ID opt_full_brackets %prec fuck {$$ = $1+",#"+$2;}
 		|	ID opt_full_brackets '.' variable %prec fuck
-		|   variable_
 		;
 
-variable_:   '~' variable
-		 |   DEC variable
-		 |   INC variable
-		 |   variable DEC %prec ttt
-		 |   variable INC %prec ttt
+variable_:   '~' variable 
+		 |   DEC variable {cg.arithmeticOperand("-",$2,$2,"1");}
+		 |   INC variable {cg.arithmeticOperand("+",$2,$2,"1");}
+		 |   variable DEC %prec ttt {cg.arithmeticOperand("-",$1,$1,"1");}
+		 |   variable INC %prec ttt {cg.arithmeticOperand("+",$1,$1,"1");}
 		 ;
 
-const_val:	IC
-		|	RC
-		|	CC
-		|	BC
-		|	SC
+const_val:	IC {$$ = "#" + (new Integer($1).toString());}
+		|	RC 
+		|	CC {$$ = "#" + (new Integer((int)$1.charAt(0)).toString());}
+		|	BC {$$ = "#" + $1;}
+		|	SC {$$ = $1;}
 		;
 
-int_const:  IC 
-		 |  CC 
+int_const:  IC {$$=new Integer($1).toString();}
+		 |  CC {$$=$1;}
 		 ;
 
 
@@ -272,6 +279,7 @@ public Parser(Reader r)
 {
     cg= new CG();
 	lexer = new Yylex(r, this);
+	//yydebug = true;
 }
 /* that's how you use the parser */
 public static void main(String args[]) throws IOException 

@@ -1,13 +1,27 @@
 %%
 %byaccj
+
+//%debug
+
+%line
+%column
+
 %{
-/* store a reference to the parser object */
-private Parser yyparser;
-/* constructor taking an additional parser object */
-public Yylex(java.io.Reader r, Parser yyparser) {
-this(r);
-this.yyparser = yyparser;
-}
+	/* store a reference to the parser object */
+	private Parser yyparser;
+	/* constructor taking an additional parser object */
+	public Yylex(java.io.Reader r, Parser yyparser) {
+		this(r);
+		this.yyparser = yyparser;
+	}
+
+	public int getLine() {
+		return yyline;
+	}
+
+	public int getColumn() {
+		return yycolumn;
+	}
 %}
 
 IC = [0-9]+
@@ -102,7 +116,7 @@ WS = [ \n\t\r]+
 {HC} { yyparser.yylval = new ParserVal((yycharat(0) == '-' ? -1 : 1) * Integer.parseInt((yytext().substring(2 + ( yytext().charAt(0) == '0' ? 0 : 1))), 16));	// hex digits at 3rd or 4th char
 	return Parser.IC; }
 
-{BC} {yyparser.yylval = new ParserVal(Boolean.parseBoolean(yytext()));
+{BC} {yyparser.yylval = new ParserVal((yytext().equals("true"))?"1":"0");
 	return Parser.BC;}
 
 {CC} { if (yycharat(1) == '\\') {

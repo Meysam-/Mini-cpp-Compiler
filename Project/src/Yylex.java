@@ -455,13 +455,21 @@ class Yylex {
   private int zzFinalHighSurrogate = 0;
 
   /* user code: */
-/* store a reference to the parser object */
-private Parser yyparser;
-/* constructor taking an additional parser object */
-public Yylex(java.io.Reader r, Parser yyparser) {
-this(r);
-this.yyparser = yyparser;
-}
+	/* store a reference to the parser object */
+	private Parser yyparser;
+	/* constructor taking an additional parser object */
+	public Yylex(java.io.Reader r, Parser yyparser) {
+		this(r);
+		this.yyparser = yyparser;
+	}
+
+	public int getLine() {
+		return yyline;
+	}
+
+	public int getColumn() {
+		return yycolumn;
+	}
 
 
   /**
@@ -724,6 +732,62 @@ this.yyparser = yyparser;
     while (true) {
       zzMarkedPosL = zzMarkedPos;
 
+      boolean zzR = false;
+      int zzCh;
+      int zzCharCount;
+      for (zzCurrentPosL = zzStartRead  ;
+           zzCurrentPosL < zzMarkedPosL ;
+           zzCurrentPosL += zzCharCount ) {
+        zzCh = Character.codePointAt(zzBufferL, zzCurrentPosL, zzMarkedPosL);
+        zzCharCount = Character.charCount(zzCh);
+        switch (zzCh) {
+        case '\u000B':
+        case '\u000C':
+        case '\u0085':
+        case '\u2028':
+        case '\u2029':
+          yyline++;
+          yycolumn = 0;
+          zzR = false;
+          break;
+        case '\r':
+          yyline++;
+          yycolumn = 0;
+          zzR = true;
+          break;
+        case '\n':
+          if (zzR)
+            zzR = false;
+          else {
+            yyline++;
+            yycolumn = 0;
+          }
+          break;
+        default:
+          zzR = false;
+          yycolumn += zzCharCount;
+        }
+      }
+
+      if (zzR) {
+        // peek one character ahead if it is \n (if we have counted one line too much)
+        boolean zzPeek;
+        if (zzMarkedPosL < zzEndReadL)
+          zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+        else if (zzAtEOF)
+          zzPeek = false;
+        else {
+          boolean eof = zzRefill();
+          zzEndReadL = zzEndRead;
+          zzMarkedPosL = zzMarkedPos;
+          zzBufferL = zzBuffer;
+          if (eof) 
+            zzPeek = false;
+          else 
+            zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+        }
+        if (zzPeek) yyline--;
+      }
       zzAction = -1;
 
       zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
@@ -910,7 +974,7 @@ this.yyparser = yyparser;
             }
           case 70: break;
           case 23: 
-            { yyparser.yylval = new ParserVal(Boolean.parseBoolean(yytext()));
+            { yyparser.yylval = new ParserVal((yytext().equals("true"))?"1":"0");
 	return Parser.BC;
             }
           case 71: break;

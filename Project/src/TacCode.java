@@ -10,15 +10,15 @@ public class TacCode {
     TacCode(){
     }
     TacCode(String opCode){
-        this.opCode = opCode;
+        this(opCode,"","");
     }
-    TacCode(String opCode,String opr1,String opr2,String opr3){
+    TacCode(String opCode,String opr1,String opr2){
         this.opCode = opCode;
         this.opr1 = opr1;
         this.opr2 = opr2;
-        this.opr3 = opr3;
+        this.opr3="";
     }
-    void set(String opCode,String opr1,String opr2,String opr3){
+    TacCode(String opCode,String opr1,String opr2,String opr3){
         this.opCode = opCode;
         this.opr1 = opr1;
         this.opr2 = opr2;
@@ -27,6 +27,9 @@ public class TacCode {
 
     @Override
     public String toString() {
-        return opCode + " " + opr1 + " " + opr2 + " " + opr3;
+        String s = opCode + "  " + opr1;
+        if(!opr2.equals("")) s += "," + opr2;
+        if(!opr3.equals("")) s += "," + opr3;
+        return s;
     }
 }
